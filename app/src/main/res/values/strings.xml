@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Змейтрис</string>
+
+    <string name="replay_game">Replay</string>
+    <string name="result">result: %1$d</string>
+    <string name="best_result">best: %1$d</string>
+    <string name="exit_game">Exit</string>
+</resources>
