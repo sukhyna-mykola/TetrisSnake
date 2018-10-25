@@ -129,11 +129,25 @@ public class TetrisCanvas {
             for (Cell c : cells) {
                 if (c == null) continue;
 
-                if (c.getRow() - snCell.getRow() == 1 && snCell.getColumn() == c.getColumn()) {
-                    return true;
-                }
+                if (snake.direction == Direction.DOWN)
+                    if (c.getRow() - snCell.getRow() == 1 && snCell.getColumn() == c.getColumn()) {
+                        return true;
+                    }
 
+                if (snake.direction == Direction.UP)
+                    if (c.getRow() - snCell.getRow() == -1 && snCell.getColumn() == c.getColumn()) {
+                        return true;
+                    }
 
+                if (snake.direction == Direction.RIGHT)
+                    if (c.getRow() == snCell.getRow() && snCell.getColumn() - c.getColumn() == -1) {
+                        return true;
+                    }
+
+                if (snake.direction == Direction.LEFT)
+                    if (c.getRow() == snCell.getRow() && snCell.getColumn() - c.getColumn() == 1) {
+                        return true;
+                    }
             }
         }
         return false;
