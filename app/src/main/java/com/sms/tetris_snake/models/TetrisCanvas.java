@@ -8,6 +8,7 @@ import android.util.Log;
 
 
 import com.sms.tetris_snake.Direction;
+import com.sms.tetris_snake.Utils;
 import com.sms.tetris_snake.ViewCallbacks;
 
 import java.lang.reflect.Array;
@@ -28,6 +29,7 @@ public class TetrisCanvas {
 
     private Snake snake;
     private List<Cell> cells;
+    private List<Part> parts;
     private Cell bonus;
     private int score;
 
@@ -58,6 +60,7 @@ public class TetrisCanvas {
         paint.setColor(Color.BLACK);
         paint.setTextSize(90);
         paint.setTextAlign(Paint.Align.LEFT);
+        paint.setStrokeCap(Paint.Cap.ROUND);
 
         newGame();
     }
@@ -65,6 +68,7 @@ public class TetrisCanvas {
     public void newGame() {
 
         cells = new ArrayList<>();
+        parts = new ArrayList<>();
         snake = new Snake(rowCount, columnCount, cellSize);
 
         generateNewBonus();
@@ -89,6 +93,7 @@ public class TetrisCanvas {
         if (intersect) {
             snake.isFailDown = true;
             snake.direction = Direction.DOWN;
+            parts.addAll(generateParts(bonus));
         }
 
 
@@ -110,9 +115,23 @@ public class TetrisCanvas {
         snake.update();
     }
 
+    private List<Part> generateParts(Cell bonus) {
+        int n = Utils.RANDOM.nextInt(10) + 10;
+        List<Part> parts = new ArrayList<>(n);
+
+        for (int i = 0; i < n; i++) {
+            parts.add(new Part(bonus.column * cellSize + bonus.w / 2,
+                    bonus.row * cellSize + bonus.h / 2,
+                    cellSize / 10, cellSize / 10,
+                    Color.WHITE));
+        }
+
+        return parts;
+    }
+
     private void addSnakeToTetrisCells() {
         for (Cell c : snake.getCells()) {
-            c.setColor(Color.BLUE);
+            c.setColor(Color.WHITE);
             cells.add(new TetrisCell(c));
             score++;
         }
@@ -188,8 +207,10 @@ public class TetrisCanvas {
         Iterator<Cell> cellIterator = cells.iterator();
         while (cellIterator.hasNext()) {
             Cell c = cellIterator.next();
-            if (c.getRow() == i)
+            if (c.getRow() == i) {
                 cellIterator.remove();
+                parts.addAll(generateParts(c));
+            }
 
         }
 
@@ -212,7 +233,7 @@ public class TetrisCanvas {
         int row = newCellValue / columnCount;
         int column = newCellValue % columnCount;
 
-        bonus = new BonusCell(column, row, cellSize, cellSize, Color.GREEN);
+        bonus = new BonusCell(column, row, cellSize, cellSize, Color.WHITE);
     }
 
 
@@ -234,18 +255,54 @@ public class TetrisCanvas {
             bonus.draw(canvas);
         }
 
+        //draw parts
+        drawParts(canvas);
+        //draw score
         paint.setColor(Color.WHITE);
         canvas.drawText(String.valueOf(score), 0, 80, paint);
         paint.setColor(Color.BLACK);
+
 
         canvas.translate(-marginLeft, -marginTop);
 
     }
 
+    private void drawParts(Canvas canvas) {
+        for (Part p : parts) {
+            p.draw(canvas);
+        }
+    }
+
     private void drawControlers(Canvas canvas) {
 
+
         paint.setColor(Color.WHITE);
-        canvas.drawLine(columnCount * cellSize / 2, 0, columnCount * cellSize / 2, rowCount * cellSize, paint);
+        /*Path path = new Path();
+        path.reset();
+
+
+        float y2 = rowCount * cellSize / 2;
+        float y1 = y2 - cellSize * 1.5f;
+        float y3 = y2 + cellSize * 1.5f;
+
+        float left = cellSize * 1;
+        float right = cellSize * (columnCount - 1);
+
+        // left
+        path.moveTo(left, y1);
+        path.lineTo(left - cellSize / 2, y2);
+        path.lineTo(left, y3);
+        path.close();
+
+        // right
+        path.moveTo(right, y1);
+        path.lineTo(right + cellSize / 2, y2);
+        path.lineTo(right, y3);
+        path.close();
+
+        canvas.drawPath(path, paint);*/
+
+        canvas.drawLine(columnCount * cellSize / 2, cellSize * 1, columnCount * cellSize / 2, cellSize * (rowCount - 1), paint);
     }
 
 
@@ -298,6 +355,8 @@ public class TetrisCanvas {
         Set<Integer> used = new HashSet<>();
         List<Integer> free = new ArrayList<>();
 
+        used.add(0);
+
         for (Cell c : snake.getCells()) {
             used.add(c.getRow() * columnCount + c.getColumn());
         }
@@ -326,6 +385,21 @@ public class TetrisCanvas {
     }
 
     public void updateAnimations(long interval) {
+        for (Part p : parts) {
+            p.update(interval);
+        }
+
+        Iterator<Part> iterator = parts.iterator();
+        while (iterator.hasNext()) {
+            Part p = iterator.next();
+            if (p.x < 0 || p.x > columnCount * cellSize || p.y < 0 || p.y > rowCount * cellSize || p.h <= 0 || p.w <= 0) {
+                iterator.remove();
+                continue;
+            }
+
+
+        }
+
 
     }
 }
