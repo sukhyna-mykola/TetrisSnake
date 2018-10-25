@@ -1,7 +1,9 @@
 package com.sms.tetris_snake;
 
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -9,9 +11,10 @@ import android.widget.TextView;
 
 public class GameActivity extends AppCompatActivity implements Updator, ViewCallbacks {
 
+    private final String TAG = getClass().getSimpleName();
 
     private Game game;
-    private GameView gameView;
+    private GameSurface gameSurface;
     private GameThread gameThread;
 
     private TextView result, bestResult;
@@ -52,38 +55,35 @@ public class GameActivity extends AppCompatActivity implements Updator, ViewCall
         gameThread = new GameThread(this);
 
         game = new Game();
-        gameView = new GameView(this, game);
+        gameSurface = new GameSurface(this);
+        gameSurface.setGame(game);
 
-        gameView.post(new Runnable() {
+        gameSurface.post(new Runnable() {
             @Override
             public void run() {
 
-                game.startGame(GameActivity.this, gameView.getWidth(), gameView.getHeight());
+                game.startGame(GameActivity.this, gameSurface.getWidth(), gameSurface.getHeight());
 
                 gameThread.start();
             }
         });
 
         ViewGroup gameLayout = findViewById(R.id.game_layout);
-        gameLayout.addView(gameView);
+        gameLayout.addView(gameSurface);
 
     }
 
     @Override
-    public void update() {
-        game.update();
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                gameView.update();
+    public void update(long interval) {
+        game.update(interval);
+        gameSurface.update();
 
-            }
-        });
     }
 
     @Override
     public void endGame(final int score) {
         gameThread.setPause(true);
+        Log.d(TAG, "endGAme(" + score + ")");
 
 
         runOnUiThread(new Runnable() {

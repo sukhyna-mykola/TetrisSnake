@@ -23,7 +23,7 @@ public class GameThread extends Thread {
 
     @Override
     public void run() {
-        long startTime, sleepTime;
+        /*long startTime, sleepTime;
         while (run) {
 
             while (pause) {
@@ -44,12 +44,11 @@ public class GameThread extends Thread {
                     sleep(sleepTime);
             } catch (Exception e) {
                 e.printStackTrace();
-            }
+            }*/
 
 
-     /*   long previousFrameTime = System.currentTimeMillis();
+        long previousFrameTime = System.currentTimeMillis();
         long beforePauseTime;
-        long whenUpdate = 0;
         while (run) {
 
             while (pause) {
@@ -66,22 +65,13 @@ public class GameThread extends Thread {
 
             long elapsedTimeMS = currentFrameTime - previousFrameTime;
 
-            whenUpdate += elapsedTimeMS;
-            if (whenUpdate > 200) {
-                whenUpdate = 0;
-                updator.update();
-            }
-
-
-            if (elapsedTimeMS > 100)
-                elapsedTimeMS = 100;
-
             updator.update(elapsedTimeMS);
 
 
             previousFrameTime = currentFrameTime;
-        }*/
         }
+
+
     }
 
     public boolean isRun() {

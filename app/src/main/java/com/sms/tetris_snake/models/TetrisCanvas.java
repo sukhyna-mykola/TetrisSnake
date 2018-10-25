@@ -35,7 +35,6 @@ public class TetrisCanvas {
     private int columnCount;
     private int rowCount;
 
-
     private float marginTop, marginLeft;
 
     private ViewCallbacks viewCallbacks;
@@ -77,14 +76,13 @@ public class TetrisCanvas {
         snake.changeDirection(direction);
     }
 
-    public void update() {
+    public void update(long interval) {
 
         if (snake.isDead()) {
             viewCallbacks.endGame(score);
             return;
         }
 
-        snake.update();
 
         boolean intersect = checkIntersectSnakeWithBonus();
 
@@ -109,6 +107,7 @@ public class TetrisCanvas {
 
         checkTetrisLines();
 
+        snake.update();
     }
 
     private void addSnakeToTetrisCells() {
@@ -322,4 +321,11 @@ public class TetrisCanvas {
         return free;
     }
 
+    public boolean isFailDown() {
+        return snake.isFailDown;
+    }
+
+    public void updateAnimations(long interval) {
+
+    }
 }

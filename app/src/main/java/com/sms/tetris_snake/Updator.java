@@ -1,5 +1,5 @@
 package com.sms.tetris_snake;
 
 public interface Updator {
-    void update();
+    void update(long interval);
 }

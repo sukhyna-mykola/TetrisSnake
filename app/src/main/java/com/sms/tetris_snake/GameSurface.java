@@ -97,19 +97,20 @@ public class GameSurface extends SurfaceView implements SurfaceHolder.Callback {
                         float dx = initialX - finalX;
                         float dy = initialY - finalY;
 
-                        if (Math.abs(dx) > Math.abs(dy)) {
-                            if (initialX > finalX) {
-                                game.getTetrisCanvas().setSnakeDirection(Direction.LEFT);
+                        if (!game.getTetrisCanvas().isFailDown())
+                            if (Math.abs(dx) > Math.abs(dy)) {
+                                if (initialX > finalX) {
+                                    game.getTetrisCanvas().setSnakeDirection(Direction.LEFT);
+                                } else {
+                                    game.getTetrisCanvas().setSnakeDirection(Direction.RIGHT);
+                                }
                             } else {
-                                game.getTetrisCanvas().setSnakeDirection(Direction.RIGHT);
+                                if (initialY > finalY) {
+                                    game.getTetrisCanvas().setSnakeDirection(Direction.UP);
+                                } else {
+                                    game.getTetrisCanvas().setSnakeDirection(Direction.DOWN);
+                                }
                             }
-                        } else {
-                            if (initialY > finalY) {
-                                game.getTetrisCanvas().setSnakeDirection(Direction.UP);
-                            } else {
-                                game.getTetrisCanvas().setSnakeDirection(Direction.DOWN);
-                            }
-                        }
 
                         break;
 
