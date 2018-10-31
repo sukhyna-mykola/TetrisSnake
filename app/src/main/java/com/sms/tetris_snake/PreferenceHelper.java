@@ -17,6 +17,9 @@ public final class PreferenceHelper {
     private static final String MAX_POINTS = "max_points";
     private static final String SOUND = "sound";
 
+    private static final String GAME_LEVEL = "game_level";
+    private static final String GAME_SPEED = "game_speed";
+
     private PreferenceHelper(Context context) {
         sPref = context.getSharedPreferences(PREFERENCE, MODE_PRIVATE);
     }
@@ -39,6 +42,28 @@ public final class PreferenceHelper {
 
     }
 
+    public void saveGameLevel(int level) {
+        SharedPreferences.Editor ed = sPref.edit();
+        ed.putInt(GAME_LEVEL, level);
+        ed.apply();
+    }
+
+    public int loadGameLevel() {
+        return sPref.getInt(GAME_LEVEL, 1);
+
+    }
+
+    public void saveGameSpeed(int speed) {
+        SharedPreferences.Editor ed = sPref.edit();
+        ed.putInt(GAME_SPEED, speed);
+        ed.apply();
+    }
+
+    public int loadGameSpeed() {
+        return sPref.getInt(GAME_SPEED, 1);
+
+    }
+
     public void saveSoundPref(boolean isPlay) {
         SharedPreferences.Editor ed = sPref.edit();
         ed.putBoolean(SOUND, isPlay);
@@ -46,6 +71,6 @@ public final class PreferenceHelper {
     }
 
     public boolean isPlaySound() {
-        return sPref.getBoolean(SOUND, true);
+        return sPref.getBoolean(SOUND, false);
     }
 }

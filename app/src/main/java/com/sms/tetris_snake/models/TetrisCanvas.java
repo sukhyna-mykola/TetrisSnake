@@ -3,17 +3,16 @@ package com.sms.tetris_snake.models;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Path;
 import android.graphics.Rect;
 import android.util.Log;
 
 
 import com.sms.tetris_snake.Direction;
 import com.sms.tetris_snake.GameSurface;
+import com.sms.tetris_snake.PreferenceHelper;
 import com.sms.tetris_snake.Utils;
 import com.sms.tetris_snake.ViewCallbacks;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -29,7 +28,7 @@ public class TetrisCanvas {
 
     private static final float TEXT_MARGIN_PERCENT = 0.02f;
 
-    private static final float CELL_SIZE_PERCENT = 0.1f;
+    public static final float CELL_SIZE_PERCENTS[] = {0.1f, 0.075f, 0.05f};
 
     private static final int TIME_OF_SHOWING_SUPER_CELL = 50;
     private static final int MIN_TIME_BEFORE_SHOWING_SUPER_CELL = 200;
@@ -55,22 +54,14 @@ public class TetrisCanvas {
     private ViewCallbacks viewCallbacks;
     private GameSurface gameSurface;
 
-
     //time parameters
     private int showSuperCellAfterTakts, hideSuperCellAfterTakts;
 
 
-    public TetrisCanvas(ViewCallbacks viewCallbacks, GameSurface gameSurface) {
+    public TetrisCanvas(ViewCallbacks viewCallbacks, GameSurface gameSurface, int gameLevel) {
         this.viewCallbacks = viewCallbacks;
         this.gameSurface = gameSurface;
 
-        cellSize = gameSurface.getWidthScreen() * CELL_SIZE_PERCENT;
-
-        columnCount = (int) (gameSurface.getWidthScreen() / cellSize);
-        rowCount = (int) (gameSurface.getHeightScreen() / cellSize);
-
-        marginLeft = (gameSurface.getWidthScreen() - columnCount * cellSize) / 2;
-        marginTop = (gameSurface.getHeightScreen() - rowCount * cellSize) / 2;
 
         paint = new Paint();
         paint.setStyle(Paint.Style.FILL);
@@ -88,10 +79,18 @@ public class TetrisCanvas {
         paintRedText.setStrokeCap(Paint.Cap.ROUND);
 
 
-        newGame();
+        newGame(gameLevel);
     }
 
-    public void newGame() {
+    public void newGame(int gameLevel) {
+
+        cellSize = gameSurface.getWidthScreen() * CELL_SIZE_PERCENTS[gameLevel];
+
+        columnCount = (int) (gameSurface.getWidthScreen() / cellSize);
+        rowCount = (int) (gameSurface.getHeightScreen() / cellSize);
+
+        marginLeft = (gameSurface.getWidthScreen() - columnCount * cellSize) / 2;
+        marginTop = (gameSurface.getHeightScreen() - rowCount * cellSize) / 2;
 
         cells = new ArrayList<>();
         parts = new ArrayList<>();

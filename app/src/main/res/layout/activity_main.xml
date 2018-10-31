@@ -10,47 +10,8 @@
         android:layout_height="match_parent"
         android:layout_gravity="center" />
 
-    <LinearLayout
-        android:id="@+id/end_game_allert"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:background="@color/colorAccent"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:padding="64dp"
-        android:visibility="gone">
-
-        <TextView
-            android:id="@+id/result"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/colorWhite"
-            android:textSize="20sp"
-            android:typeface="monospace" />
-
-        <TextView
-            android:id="@+id/best_result"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/colorWhite"
-            android:textSize="30sp"
-            android:textStyle="bold"
-            android:typeface="monospace" />
-
-        <Button
-            android:id="@+id/new_game_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/replay_game" />
-
-        <Button
-            android:id="@+id/exit_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/exit_game" />
-
-    </LinearLayout>
+    <include layout="@layout/end_game_allert" />
+    <include layout="@layout/settings_allert" />
 
 </FrameLayout>
 

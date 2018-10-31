@@ -36,7 +36,6 @@ public class GameSurface extends SurfaceView implements SurfaceHolder.Callback {
     private SparseArray<Integer> soundMap;
 
 
-
     public GameSurface(Context context) {
         super(context);
         configure(context);
@@ -212,7 +211,8 @@ public class GameSurface extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     public void playSound(int mSoundId) {
-        soundPool.play(soundMap.get(mSoundId), 1, 1, 1, 0, 1f);
+        if (PreferenceHelper.getInstance(getContext()).isPlaySound())
+            soundPool.play(soundMap.get(mSoundId), 1, 1, 1, 0, 1f);
     }
 
     public void releaseResourses() {

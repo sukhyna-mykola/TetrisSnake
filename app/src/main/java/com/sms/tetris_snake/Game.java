@@ -1,7 +1,6 @@
 package com.sms.tetris_snake;
 
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.util.Log;
 
 import com.sms.tetris_snake.models.TetrisCanvas;
@@ -12,23 +11,26 @@ public class Game {
 
     private TetrisCanvas tetrisCanvas;
 
-    private long time;
-    private final long UNIT_TIME = 200;
+    private long time, unitTime;
+
+    public final long UNIT_TIMES[] = {100, 150, 200};
 
 
     public TetrisCanvas getTetrisCanvas() {
         return tetrisCanvas;
     }
 
-    public void startGame(ViewCallbacks viewCallbacks, GameSurface gameSurface) {
-        tetrisCanvas = new TetrisCanvas(viewCallbacks, gameSurface);
+    public void startGame(ViewCallbacks viewCallbacks, GameSurface gameSurface, int gameLevel, int gameSpeed) {
 
-        newGame();
+        tetrisCanvas = new TetrisCanvas(viewCallbacks, gameSurface, gameLevel);
+
+        newGame(gameLevel, gameSpeed);
     }
 
-    public void newGame() {
+    public void newGame(int gameLevel, int gameSpeed) {
         time = 0;
-        tetrisCanvas.newGame();
+        unitTime = UNIT_TIMES[gameSpeed];
+        tetrisCanvas.newGame(gameLevel);
     }
 
     public void draw(Canvas canvas) {
@@ -38,8 +40,8 @@ public class Game {
     public void update(long interval) {
         Log.d(TAG, "update, interval = " + interval);
         time += interval;
-        if (time > UNIT_TIME) {
-            time = time - UNIT_TIME;
+        if (time > unitTime) {
+            time = time - unitTime;
             tetrisCanvas.update(interval);
         }
 

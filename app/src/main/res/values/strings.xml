@@ -5,4 +5,6 @@
     <string name="result">result: %1$d</string>
     <string name="best_result">best: %1$d</string>
     <string name="exit_game">Exit</string>
+    <string name="sound">Sound</string>
+    <string name="settings">Settings</string>
 </resources>

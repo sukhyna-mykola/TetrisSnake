@@ -12,7 +12,7 @@ import java.util.Random;
 public class Snake {
 
 
-    private static final int MAX_TAKT_BEFORE_END_GAME = 100;
+    private static final int MAX_TAKT_BEFORE_END_GAME = 200;
 
     private Cell[] cells;
     private Direction direction;
@@ -74,7 +74,9 @@ public class Snake {
 
         if (superSnakeTakts >= 0) {
             superSnakeTakts--;
-        } else {
+        }
+
+        if (!isFailDown && superSnakeTakts < 0) {
             endGameIfNotCatchCellAfterTakts--;
         }
 
