@@ -55,21 +55,18 @@ public class GameActivity extends AppCompatActivity implements Updator, ViewCall
         gameThread = new GameThread(this);
 
         game = new Game();
-        gameSurface = new GameSurface(this);
-        gameSurface.setGame(game);
 
+        gameSurface = findViewById(R.id.game_surface);
+        gameSurface.setGame(game);
         gameSurface.post(new Runnable() {
             @Override
             public void run() {
 
-                game.startGame(GameActivity.this, gameSurface.getWidth(), gameSurface.getHeight());
+                game.startGame(GameActivity.this, gameSurface);
 
                 gameThread.start();
             }
         });
-
-        ViewGroup gameLayout = findViewById(R.id.game_layout);
-        gameLayout.addView(gameSurface);
 
     }
 

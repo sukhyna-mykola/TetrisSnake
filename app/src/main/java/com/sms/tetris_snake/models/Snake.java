@@ -32,7 +32,7 @@ public class Snake {
         this.columnCount = columnCount;
         this.cellSize = cellSize;
 
-        regenerateSnake();
+        regenerateSnake(0);
     }
 
 
@@ -116,9 +116,9 @@ public class Snake {
     }
 
 
-    void regenerateSnake() {
+    void regenerateSnake(int score) {
 
-        cells = new Cell[new Random().nextInt(columnCount / 2) + 2];
+        cells = new Cell[new Random().nextInt(columnCount / 2) + (score / 50) + 2];
 
         for (int i = 0; i < cells.length; i++) {
             cells[i] = new Cell(cells.length - i, 0, cellSize, cellSize, Color.WHITE);

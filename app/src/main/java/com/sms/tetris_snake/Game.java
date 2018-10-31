@@ -20,8 +20,8 @@ public class Game {
         return tetrisCanvas;
     }
 
-    public void startGame(ViewCallbacks viewCallbacks, int w, int h) {
-        tetrisCanvas = new TetrisCanvas(viewCallbacks, w, h);
+    public void startGame(ViewCallbacks viewCallbacks, GameSurface gameSurface) {
+        tetrisCanvas = new TetrisCanvas(viewCallbacks, gameSurface);
 
         newGame();
     }

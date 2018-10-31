@@ -9,6 +9,7 @@ import android.util.Log;
 
 
 import com.sms.tetris_snake.Direction;
+import com.sms.tetris_snake.GameSurface;
 import com.sms.tetris_snake.Utils;
 import com.sms.tetris_snake.ViewCallbacks;
 
@@ -30,8 +31,8 @@ public class TetrisCanvas {
 
     private static final float CELL_SIZE_PERCENT = 0.1f;
 
-    public static final int TIME_OF_SHOWING_SUPER_CELL = 50;
-    public static final int MIN_TIME_BEFORE_SHOWING_SUPER_CELL = 200;
+    private static final int TIME_OF_SHOWING_SUPER_CELL = 50;
+    private static final int MIN_TIME_BEFORE_SHOWING_SUPER_CELL = 200;
 
 
     private Paint paint;
@@ -42,6 +43,7 @@ public class TetrisCanvas {
     private List<Part> parts;
     private Cell bonus;
     private Cell superCell;
+
     private int score;
 
     private float cellSize;
@@ -51,35 +53,37 @@ public class TetrisCanvas {
     private float marginTop, marginLeft;
 
     private ViewCallbacks viewCallbacks;
+    private GameSurface gameSurface;
 
 
     //time parameters
     private int showSuperCellAfterTakts, hideSuperCellAfterTakts;
 
 
-    public TetrisCanvas(ViewCallbacks viewCallbacks, int w, int h) {
+    public TetrisCanvas(ViewCallbacks viewCallbacks, GameSurface gameSurface) {
         this.viewCallbacks = viewCallbacks;
+        this.gameSurface = gameSurface;
 
-        cellSize = w * CELL_SIZE_PERCENT;
+        cellSize = gameSurface.getWidthScreen() * CELL_SIZE_PERCENT;
 
-        columnCount = (int) (w / cellSize);
-        rowCount = (int) (h / cellSize);
+        columnCount = (int) (gameSurface.getWidthScreen() / cellSize);
+        rowCount = (int) (gameSurface.getHeightScreen() / cellSize);
 
-        marginLeft = (w - columnCount * cellSize) / 2;
-        marginTop = (h - rowCount * cellSize) / 2;
+        marginLeft = (gameSurface.getWidthScreen() - columnCount * cellSize) / 2;
+        marginTop = (gameSurface.getHeightScreen() - rowCount * cellSize) / 2;
 
         paint = new Paint();
         paint.setStyle(Paint.Style.FILL);
         paint.setAntiAlias(true);
         paint.setStrokeWidth(3);
-        paint.setTextSize(w * SCORE_TEXT_SIZE_PERCENT);
+        paint.setTextSize(gameSurface.getWidthScreen() * SCORE_TEXT_SIZE_PERCENT);
         paint.setTextAlign(Paint.Align.LEFT);
         paint.setStrokeCap(Paint.Cap.ROUND);
 
         paintRedText = new Paint();
         paintRedText.setColor(Color.RED);
         paintRedText.setAntiAlias(true);
-        paintRedText.setTextSize(w * RED_TEXT_SIZE_PERCENT);
+        paintRedText.setTextSize(gameSurface.getWidthScreen() * RED_TEXT_SIZE_PERCENT);
         paintRedText.setTextAlign(Paint.Align.RIGHT);
         paintRedText.setStrokeCap(Paint.Cap.ROUND);
 
@@ -123,6 +127,13 @@ public class TetrisCanvas {
     }
 
     public void update(long interval) {
+        //end game if snake is dead
+        if (snake.isDead()) {
+            viewCallbacks.endGame(score);
+            gameSurface.playSound(GameSurface.GAME_OVER_SOUND_ID);
+            return;
+        }
+
         //move snake by its direction
         snake.update();
         //check intersection with bonus cell
@@ -135,10 +146,6 @@ public class TetrisCanvas {
         checkIntersectSnake();
         //check full line in tetris elements
         checkTetrisLines();
-        //ende game if snake is dead
-        if (snake.isDead()) {
-            viewCallbacks.endGame(score);
-        }
 
     }
 
@@ -150,7 +157,7 @@ public class TetrisCanvas {
                 snake.setDead(true);
             } else {
                 addSnakeToTetrisCells();
-                snake.regenerateSnake();
+                snake.regenerateSnake(score);
                 generateNewBonus();
             }
         }
@@ -164,6 +171,7 @@ public class TetrisCanvas {
             snake.setDirection(Direction.DOWN);
             parts.addAll(generateParts(bonus));
             snake.offSuperMode();
+            gameSurface.playSound(GameSurface.BONUS_SOUND_ID);
         }
     }
 
@@ -178,6 +186,7 @@ public class TetrisCanvas {
                 parts.addAll(generateParts(superCell));
                 snake.onSuperMode();
                 generateSuperCell();
+                gameSurface.playSound(GameSurface.BONUS_SOUND_ID);
 
             }
         }
@@ -229,6 +238,7 @@ public class TetrisCanvas {
                 if (c.row == snake.getHead().row && c.column == snake.getHead().column) {
                     iterator.remove();
                     parts.addAll(generateParts(c));
+                    gameSurface.playSound(GameSurface.BLOCKER_SOUND_ID);
                 }
             }
         } else {
@@ -309,6 +319,7 @@ public class TetrisCanvas {
         if (countNotNul < columnCount)
             return;
 
+
         //remove fill line
         Iterator<Cell> cellIterator = cells.iterator();
         while (cellIterator.hasNext()) {
@@ -316,6 +327,7 @@ public class TetrisCanvas {
             if (c.getRow() == i) {
                 cellIterator.remove();
                 parts.addAll(generateParts(c));
+                gameSurface.playSound(GameSurface.BLOCKER_SOUND_ID);
             }
 
         }
@@ -551,9 +563,7 @@ public class TetrisCanvas {
                 iterator.remove();
             }
 
-
         }
-
 
     }
 }

@@ -28,16 +28,13 @@ public class GameSurface extends SurfaceView implements SurfaceHolder.Callback {
 
     private float widthScreen, heightScreen;
 
-    private static final float POINTS_TEXT_SIZE_PERCENT = 0.06f;
-    private static final float POINTS_MARGIN_PERCENT = 0.02f;
-
     public static final int BLOCKER_SOUND_ID = 0;
     public static final int BONUS_SOUND_ID = 1;
+    public static final int GAME_OVER_SOUND_ID = 2;
 
     private SoundPool soundPool;
     private SparseArray<Integer> soundMap;
 
-    private Paint paint;
 
 
     public GameSurface(Context context) {
@@ -56,14 +53,11 @@ public class GameSurface extends SurfaceView implements SurfaceHolder.Callback {
 
         initSoundPool();
 
-        soundMap = new SparseArray(2);
+        soundMap = new SparseArray(3);
         soundMap.put(BLOCKER_SOUND_ID, soundPool.load(mContext, R.raw.block, 1));
         soundMap.put(BONUS_SOUND_ID, soundPool.load(mContext, R.raw.bonus, 1));
+        soundMap.put(GAME_OVER_SOUND_ID, soundPool.load(mContext, R.raw.game_over, 1));
 
-        paint = new Paint();
-        paint.setColor(Color.WHITE);
-        paint.setAntiAlias(true);
-        paint.setTypeface(Typeface.DEFAULT_BOLD);
 
         setOnTouchListener(new OnTouchListener() {
             float initialX, initialY;
@@ -161,7 +155,6 @@ public class GameSurface extends SurfaceView implements SurfaceHolder.Callback {
         widthScreen = w;
         heightScreen = h;
 
-        paint.setTextSize(POINTS_TEXT_SIZE_PERCENT * getHeightScreen());
     }
 
     @Override
